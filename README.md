@@ -15,6 +15,9 @@ Through our exploration of creation using generative AI, we must continue to loo
 そしてそれも、いつか代替されうる機能ではないでしょうか。
 私たちは、生成AIによる創作の探求を通じて、人間が創作することの意義、意味、その根源たる欲求を見つめ続けなければならないでしょう。
 
+## v1.1 Generated images
+![AI-Art-GP-3-generated-images-v1 1](https://github.com/user-attachments/assets/217688a2-952b-4f6f-8d36-607a40ad7afe)
+
 ## Concept & Gallery page
 - https://portfolio.foti.jp/100-times-ai-heroes
 
@@ -25,6 +28,51 @@ Through our exploration of creation using generative AI, we must continue to loo
 - https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor.py
 - Spread Sheet 20240915 snapshot
   - https://docs.google.com/spreadsheets/d/1cxKgkkW2GjupXP1B1Hp5QgcfJg5_DXzbyBiqQE7EFpk/edit?usp=sharing
-
-## v1.1 Generated images
-![AI-Art-GP-3-generated-images-v1 1](https://github.com/user-attachments/assets/217688a2-952b-4f6f-8d36-607a40ad7afe)
+ 
+## Workflow
+```mermaid
+flowchart LR
+	Human((Human)) --> SeedsSheet[(Seeds Sheet)] 
+	SeedsSheet --> |t2t-Few-Shot| SeedsSheet
+	Human --> WantsSheet[(Wants Sheet)] 
+	WantsSheet --> |t2t-Few-Shot| WantsSheet
+	Human --> GenderSheet[(Gender Sheet)] 
+	Human --> AgeSheet[(Age Sheet)] 
+	Human --> SpeciesSheet[(Species Sheet)] 
+	ReferenceImage -->|i2t| Subject
+	ReferenceImage -->|i2t| Angle
+	ReferenceImage -->|i2t| Pose
+	ReferenceImage -->|i2t| Background
+	ReferenceImage -->|i2t| ArtStyle 
+	ReferenceImage -->|i2t| 1[Role] 
+	1 --> RoleSheet[(Role Sheet)] 
+	RoleSheet --> |t2t-Few-Shot| RoleSheet
+	GenderSheet -->|RAG| PhysicalCharacteristics 
+	AgeSheet -->|RAG| PhysicalCharacteristics 
+	SpeciesSheet -->|RAG| PhysicalCharacteristics 
+	SeedsSheet -->|RAG| Seeds 
+	WantsSheet -->|RAG| Wants 
+	RoleSheet -->|RAG| Role 
+	BasePrompt -->|t2t| ImagePrompt
+	Seeds --> CharacterPrompt
+	Wants -->CharacterPrompt
+	Role --> CharacterPrompt
+	PhysicalCharacteristics --> CharacterPrompt
+	CharacterPrompt -->|t2t| ImagePrompt
+	Subject -->|t2t| ImagePrompt
+	Angle -->|t2t| ImagePrompt
+	Pose -->|t2t| ImagePrompt
+	Background -->|t2t| ImagePrompt
+	ArtStyle -->|t2t| ImagePrompt
+	ImagePrompt -->|t2i| Image
+	CharacterPrompt -->|t2t| Name
+  CharacterPrompt -->|t2t| Profile
+	CharacterPrompt -->|t2t| Seriff
+	Image --> Artwork
+	Human --> Artwork
+	Artwork --> Character
+	Image --> Character
+	Name --> Character
+	Profile --> Character
+	Seriff --> Character
+```
