@@ -20,3 +20,8 @@ Through our exploration of creation using generative AI, we must continue to loo
 
 ## Concept Video (Japanese)
 - https://youtu.be/_2SVlF7QJnQ
+
+## Code
+- https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor.py
+- Spread Sheet 20240915 snapshot
+  - https://docs.google.com/spreadsheets/d/1cxKgkkW2GjupXP1B1Hp5QgcfJg5_DXzbyBiqQE7EFpk/edit?usp=sharing
