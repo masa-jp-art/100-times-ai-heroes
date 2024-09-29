@@ -1,3 +1,4 @@
+```mermaid
 flowchart LR
 	Human((Human)) --> SeedsSheet[(Seeds Sheet)] 
 	SeedsSheet --> |t2t-Few-Shot| SeedsSheet
@@ -42,3 +43,4 @@ flowchart LR
 	Name --> Character
 	Profile --> Character
 	Seriff --> Character
+```
