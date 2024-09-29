@@ -25,3 +25,6 @@ Through our exploration of creation using generative AI, we must continue to loo
 - https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor.py
 - Spread Sheet 20240915 snapshot
   - https://docs.google.com/spreadsheets/d/1cxKgkkW2GjupXP1B1Hp5QgcfJg5_DXzbyBiqQE7EFpk/edit?usp=sharing
+
+## v1.1 Generated images
+![AI-Art-GP-3-generated-images-v1 1](https://github.com/user-attachments/assets/217688a2-952b-4f6f-8d36-607a40ad7afe)
