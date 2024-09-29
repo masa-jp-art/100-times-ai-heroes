@@ -15,7 +15,7 @@ Through our exploration of creation using generative AI, we must continue to loo
 そしてそれも、いつか代替されうる機能ではないでしょうか。
 私たちは、生成AIによる創作の探求を通じて、人間が創作することの意義、意味、その根源たる欲求を見つめ続けなければならないでしょう。
 
-## Concept page
+## Concept & Gallery page
 - https://portfolio.foti.jp/100-times-ai-heroes
 
 ## Concept Video (Japanese)
