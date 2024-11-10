@@ -17,7 +17,7 @@ auth.authenticate_user()
 creds, _ = default()
 gc = gspread.authorize(creds)
 # スプレッドシートとシートを開く
-sheet_url = '<https://docs.google.com/spreadsheets/d/1kEezsKrw0PyAtu1nsfrJbYzHRzVGP5eXqDknDNYhU4g/>'
+sheet_url = '<spreadsheet URL>'
 spreadsheet = gc.open_by_url(sheet_url)
 
 # 各シートを取得
