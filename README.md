@@ -3,31 +3,25 @@
 - 3rd AI Art Grand Prix Entry Art-Works
 
 ## Concept
-In this artwork, "100 TIMES AI HEROES," I broke down the thought flow and work process I use when creating characters in my own manga and reproduced it using generative AI, accelerating the speed at which characters are created.
-It is expected that by utilizing the capabilities of generative AI, I can improve the productivity of character creation and enable manga production that focuses more on my own artistic creativity.
-However, at the same time, I also realized that even the reflection of my own artistic creativity might be replaced by generative AI. If generative AI could autonomously create characters and stories, humans might only be left with the role of appreciating them.
-And perhaps that function could be replaced someday.
-Through our exploration of creation using generative AI, we must continue to look at the significance, meaning, and fundamental desire of human creation.
+In this project, I broke down the thought flow and work process of character creation in my own manga production and reproduced it using generative AI, accelerating the speed of character creation.
+By utilizing the capabilities of generative AI, I hope to improve the productivity of processes such as character creation, enabling me to create works that are more focused on my own artistic creativity.
+However, at the same time, I also realized that even the reflection of my own artistic creativity in my work might be replaced by generative AI. If generative AI can continue to create characters and stories autonomously, humans may only be left with the role of appreciating them.
+Furthermore, even the role of appreciating works may one day be a function that can be replaced by AI.
+Through the exploration of creation using generative AI, we will have to reexamine the meaning, purpose, and fundamental desire of human creation.
+Finalist entry for the 3rd AI Art Grand Prix
 
-この作品「100 TIMES AI HEROES」では、私自身のマンガ制作におけるキャラクター創出の際の思考フローと作業プロセスを分解し、生成AIを用いて再現することで、キャラクターが生み出されるスピードを加速させました。
-生成AIの能力を活かして、キャラクター創出の生産性を向上し、より私自身の作家性にフォーカスしたマンガ制作を可能にすることが期待されます。
-しかし一方で、私自身の作家性の反映すら、生成AIに代替できてしまうのではないか？という気づきもありました。キャラクターやストーリーを生成AIが自律的に創作することができたら、人間には鑑賞する役割しか残らないかもしれません。
-そしてそれも、いつか代替されうる機能ではないでしょうか。
-私たちは、生成AIによる創作の探求を通じて、人間が創作することの意義、意味、その根源たる欲求を見つめ続けなければならないでしょう。
+このプロジェクトでは、私自身のマンガ制作におけるキャラクター創出の思考フローと作業プロセスを分解し、生成AIを用いて再現することで、キャラクター創出のスピードを加速させました。 生成AIの能力を活かして、キャラクター創出などのプロセスの生産性を向上し、より私自身の作家性にフォーカスした作品制作を可能にすることが期待できます。 しかし一方で、作品への私自身の作家性の反映すら、生成AIに代替できてしまうのではないか？という気づきもありました。キャラクターやストーリーを、生成AIが自律的に創作し続けることができたら、人間には鑑賞する役割しか残らないかもしれません。 さらに言えば、作品を鑑賞する役割すら、いつかAIに代替されうる機能なのかもしれません。 私たちは、生成AIによる創作の探求を通じて、人間による創作の意義、目的、その根源たる欲求を見つめ直さなければならないでしょう。
 
-## v1.1 Generated images
-![AI-Art-GP-3-generated-images-v1 1](https://github.com/user-attachments/assets/217688a2-952b-4f6f-8d36-607a40ad7afe)
+第3回AIアートグランプリ審査委員特別賞受賞
+
+## Blog（日本語のみ）
+- https://note.com/msfmnkns/n/naa7eaadc5054
 
 ## Concept & Gallery page
 - https://portfolio.foti.jp/100-times-ai-heroes
 
-## Concept Video (Japanese)
-- https://youtu.be/_2SVlF7QJnQ
-
 ## Code
 - https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor.py
-- Spread Sheet 20240915 snapshot
-  - https://docs.google.com/spreadsheets/d/1cxKgkkW2GjupXP1B1Hp5QgcfJg5_DXzbyBiqQE7EFpk/edit?usp=sharing
  
 ## Workflow
 ```mermaid
