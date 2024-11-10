@@ -14,11 +14,25 @@ Finalist entry for the 3rd AI Art Grand Prix
 
 第3回AIアートグランプリ審査委員特別賞受賞
 
+## Concept page
+- https://portfolio.foti.jp/100-times-ai-heroes
+
 ## Blog（日本語のみ）
 - https://note.com/msfmnkns/n/naa7eaadc5054
 
-## Concept & Gallery page
-- https://portfolio.foti.jp/100-times-ai-heroes
+## Gallery
+
+### v1.2
+
+- https://youtu.be/b0jEhHOS0PM
+
+### v1.1
+
+- https://youtu.be/HX0C0swU4Rc
+
+### v1.0
+
+- https://youtu.be/2luIVu3bXLg
 
 ## Code
 - https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor.py
