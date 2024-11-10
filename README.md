@@ -35,7 +35,7 @@ Finalist entry for the 3rd AI Art Grand Prix
 - https://youtu.be/2luIVu3bXLg
 
 ## Code
-- https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor.py
+- https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor-v1.0.py
  
 ## Workflow
 ```mermaid
