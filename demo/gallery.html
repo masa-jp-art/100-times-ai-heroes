@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery - 100 TIMES AI HEROES</title>
+  <meta name="description" content="100人のAI生成ヒーローギャラリー">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">100 TIMES AI HEROES</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="generate.html">Generate</a></li>
+        <li><a href="concept.html">Concept</a></li>
+        <li><a href="workflow.html">Workflow</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Gallery Section -->
+  <div class="container">
+    <div class="gallery-header">
+      <h1>Character Gallery</h1>
+      <p style="color: var(--text-secondary); font-size: 1.1rem;">
+        AIによって生成された100人のユニークなヒーローたち
+      </p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCharacters('all')">All</button>
+      <button class="filter-btn" onclick="filterCharacters('human')">Human</button>
+      <button class="filter-btn" onclick="filterCharacters('cyborg')">Cyborg</button>
+      <button class="filter-btn" onclick="filterCharacters('ai')">AI</button>
+      <button class="filter-btn" onclick="filterCharacters('hybrid')">Hybrid</button>
+      <button class="filter-btn" onclick="filterCharacters('other')">Other</button>
+    </div>
+
+    <!-- Character Grid -->
+    <div class="character-grid" id="characterGrid">
+      <!-- Characters will be loaded by JavaScript -->
+    </div>
+
+    <!-- Pagination Info -->
+    <div style="text-align: center; margin: 3rem 0;">
+      <p style="color: var(--text-secondary);">
+        Showing 6 of 100 characters (Demo version)<br>
+        <span style="color: var(--primary);">Full gallery coming soon</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>
+      <strong>100 TIMES AI HEROES</strong><br>
+      第3回AIアートグランプリ 審査委員特別賞受賞作品<br>
+      <a href="https://portfolio.foti.jp/100-times-ai-heroes" target="_blank">Portfolio</a> |
+      <a href="https://note.com/msfmnkns/n/naa7eaadc5054" target="_blank">Blog</a> |
+      <a href="https://github.com/masa-jp-art/100-times-ai-heroes" target="_blank">GitHub</a>
+    </p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
