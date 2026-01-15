@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Character - 100 TIMES AI HEROES</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">100 TIMES AI HEROES</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="generate.html">Generate</a></li>
+        <li><a href="concept.html">Concept</a></li>
+        <li><a href="workflow.html">Workflow</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Generate Section -->
+  <div class="container">
+    <div class="character-detail">
+      <div class="gallery-header">
+        <h1>Generate Your Hero</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">
+          AIがあなただけのユニークなキャラクターを生成します
+        </p>
+      </div>
+
+      <!-- Generation Form -->
+      <div style="max-width: 600px; margin: 3rem auto;">
+        <div style="background: var(--bg-card); padding: 2rem; border: 2px solid var(--border-glow); border-radius: 10px; margin-bottom: 2rem;">
+          <h3 style="color: var(--primary); margin-bottom: 1.5rem;">Generation Options</h3>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              Age
+            </label>
+            <select id="ageSelect" style="width: 100%; padding: 0.8rem; background: var(--bg-dark); border: 1px solid var(--border-glow); color: var(--text-primary); border-radius: 5px;">
+              <option value="random">Random</option>
+              <option value="Preteen">Preteen</option>
+              <option value="Teen">Teen</option>
+              <option value="Young Adult">Young Adult</option>
+              <option value="Middle-aged">Middle-aged</option>
+              <option value="Elderly">Elderly</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              Gender
+            </label>
+            <select id="genderSelect" style="width: 100%; padding: 0.8rem; background: var(--bg-dark); border: 1px solid var(--border-glow); color: var(--text-primary); border-radius: 5px;">
+              <option value="random">Random</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Genderless">Genderless</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              Species
+            </label>
+            <select id="speciesSelect" style="width: 100%; padding: 0.8rem; background: var(--bg-dark); border: 1px solid var(--border-glow); color: var(--text-primary); border-radius: 5px;">
+              <option value="random">Random</option>
+              <option value="Human">Human</option>
+              <option value="Cyborg">Cyborg</option>
+              <option value="AI">AI</option>
+              <option value="Alien">Alien</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Lycanthrope">Lycanthrope</option>
+              <option value="Demigod">Demigod</option>
+            </select>
+          </div>
+
+          <button id="generateBtn" class="btn" onclick="generateCharacter()" style="width: 100%; margin: 0;">
+            Generate Character
+          </button>
+
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem; text-align: center;">
+            ⚠️ This is a demo. Actual generation takes 20-30 seconds.
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="generateLoading" style="display: none; text-align: center; padding: 3rem;">
+          <div class="spinner"></div>
+          <p style="color: var(--primary); font-size: 1.2rem;">Generating your hero...</p>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem;">
+            AI is creating character concept, profile, and artwork
+          </p>
+        </div>
+
+        <!-- Result Display -->
+        <div id="generateResult" style="display: none;">
+          <div style="background: var(--bg-card); border: 2px solid var(--border-glow); border-radius: 10px; overflow: hidden;">
+            <div class="detail-image" id="resultIcon" style="height: 400px; font-size: 6rem;">
+              ⚡
+            </div>
+
+            <div style="padding: 2rem;">
+              <h2 id="resultName" style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem;">Character Name</h2>
+
+              <div class="detail-quote" id="resultQuote" style="margin-bottom: 1.5rem;">
+                「Character quote」
+              </div>
+
+              <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Profile</h4>
+                <p id="resultProfile" style="color: var(--text-secondary); line-height: 1.6;">Profile here...</p>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="attribute">
+                  <div class="attribute-label">Age</div>
+                  <div class="attribute-value" id="resultAge">-</div>
+                </div>
+                <div class="attribute">
+                  <div class="attribute-label">Gender</div>
+                  <div class="attribute-value" id="resultGender">-</div>
+                </div>
+                <div class="attribute">
+                  <div class="attribute-label">Species</div>
+                  <div class="attribute-value" id="resultSpecies">-</div>
+                </div>
+                <div class="attribute">
+                  <div class="attribute-label">Role</div>
+                  <div class="attribute-value" id="resultRole">-</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1rem;">
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Special Ability</h4>
+                <p id="resultAbility" style="color: var(--text-secondary);">-</p>
+              </div>
+
+              <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Wants / Goals</h4>
+                <p id="resultWants" style="color: var(--text-secondary);">-</p>
+              </div>
+
+              <div style="text-align: center; padding-top: 1rem; border-top: 1px solid var(--border-glow);">
+                <button class="btn btn-secondary" onclick="generateCharacter()" style="margin: 0.5rem;">
+                  Generate Another
+                </button>
+                <button class="btn" onclick="alert('Save functionality coming soon!')" style="margin: 0.5rem;">
+                  Save to Gallery
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div style="max-width: 800px; margin: 4rem auto; text-align: center;">
+        <h3 style="color: var(--primary); margin-bottom: 1rem;">How It Works</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">1️⃣</div>
+            <h4 style="color: var(--text-secondary);">Select Options</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">年齢、性別、種族を選択</p>
+          </div>
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">2️⃣</div>
+            <h4 style="color: var(--text-secondary);">AI Generation</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">GPT-4が設定を生成</p>
+          </div>
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">3️⃣</div>
+            <h4 style="color: var(--text-secondary);">Create Artwork</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">DALL-Eが画像を生成</p>
+          </div>
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">4️⃣</div>
+            <h4 style="color: var(--text-secondary);">Your Hero</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">完成したキャラクター</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>
+      <strong>100 TIMES AI HEROES</strong><br>
+      第3回AIアートグランプリ 審査委員特別賞受賞作品<br>
+      <a href="https://portfolio.foti.jp/100-times-ai-heroes" target="_blank">Portfolio</a> |
+      <a href="https://note.com/msfmnkns/n/naa7eaadc5054" target="_blank">Blog</a> |
+      <a href="https://github.com/masa-jp-art/100-times-ai-heroes" target="_blank">GitHub</a>
+    </p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
