@@ -1,6 +1,6 @@
 # 100 TIMES AI HEROES
 ![20240915-100-TIMES-AI-HEROES-v1 0-1920](https://github.com/user-attachments/assets/4bedc96b-0139-4838-8fe9-251ddee41220)
-- 3rd AI Art Grand Prix Entry Art-Works
+- Winner of the Special Jury Award at the 3rd AI Art Grand Prix
 
 ## Concept
 In this project, I broke down the thought flow and work process of character creation in my own manga production and reproduced it using generative AI, accelerating the speed of character creation.
