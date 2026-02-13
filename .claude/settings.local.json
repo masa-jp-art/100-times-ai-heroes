@@ -8,7 +8,8 @@
       "Bash(python:*)",
       "Bash(ollama list:*)",
       "Bash(pytest:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: Ollama版キャラクター生成システムの基盤実装\n\n- ollama_hero_gen.py: メインスクリプト（Config, OllamaInference, SheetsClient, Prompts）\n- harness/: 開発ハーネス（features.json, test_harness.py, init.sh, SESSION_PROTOCOL.md）\n- docs/DESIGN_SPEC_OLLAMA.md: 設計仕様書\n- CLAUDE.md: Claude Code用セッションプロトコル\n\nテスト結果: 13/31 features passing\n- 環境設定、Ollama接続、プロンプト、ImagePrompt生成が動作確認済み\n- Google Sheets連携は credentials.json 設定後にテスト可能\nEOF\n\\)\")"
     ]
   }
 }

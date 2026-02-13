@@ -1,5 +1,5 @@
 """
-100 Times AI Heroes - Ollama版キャラクター生成システム
+100 Times AI Heroes - Ollama版キャラクター生成システム（ローカル完結版）
 
 Usage:
     python ollama_hero_gen.py
@@ -8,16 +8,17 @@ Usage:
 
 from __future__ import annotations
 
+import csv
 import os
 import random
 import time
 from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
-import gspread
 import ollama
 from dotenv import load_dotenv
-from google.oauth2.service_account import Credentials
 
 
 # =============================================================================
@@ -31,18 +32,16 @@ class Config:
 
     model: str
     host: str
-    sheet_url: str
-    credentials_path: str
+    data_dir: str
     num_iterations: int = 100
 
     @classmethod
     def from_env(cls) -> "Config":
         load_dotenv()
         return cls(
-            model=os.getenv("OLLAMA_MODEL", "gpt-oss-20b"),
+            model=os.getenv("OLLAMA_MODEL", "llama3.2"),
             host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
-            sheet_url=os.getenv("SHEET_URL", ""),
-            credentials_path=os.getenv("CREDENTIALS_PATH", "./credentials.json"),
+            data_dir=os.getenv("DATA_DIR", "./data"),
         )
 
 
@@ -116,56 +115,152 @@ class OllamaInference:
 
 
 # =============================================================================
-# Google Sheets Client
+# Local Storage (CSV)
 # =============================================================================
 
 
-class SheetsClient:
-    """Google Sheets クライアント"""
-
-    SCOPES = [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive",
-    ]
+class LocalStorage:
+    """ローカルCSVストレージ"""
 
     def __init__(self, config: Config):
-        if not os.path.exists(config.credentials_path):
-            raise FileNotFoundError(
-                f"Credentials file not found: {config.credentials_path}\n"
-                "See docs/DESIGN_SPEC_OLLAMA.md section 7.3 for setup."
-            )
+        self.data_dir = Path(config.data_dir)
+        self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        creds = Credentials.from_service_account_file(
-            config.credentials_path, scopes=self.SCOPES
-        )
-        gc = gspread.authorize(creds)
+        # シードデータファイル
+        self.seed_files = {
+            "age": self.data_dir / "seed_age.csv",
+            "gender": self.data_dir / "seed_gender.csv",
+            "species": self.data_dir / "seed_species.csv",
+            "ability": self.data_dir / "seed_ability.csv",
+            "wants": self.data_dir / "seed_wants.csv",
+            "role": self.data_dir / "seed_role.csv",
+        }
 
-        if not config.sheet_url:
-            raise ValueError("SHEET_URL not configured in .env")
+        # 出力ファイル
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.output_file = self.data_dir / f"output_{timestamp}.csv"
 
-        self.spreadsheet = gc.open_by_url(config.sheet_url)
+        # シードデータ初期化
+        self._ensure_seed_data()
 
-        # シート取得
-        self.wants = self.spreadsheet.worksheet("Wants")
-        self.ability = self.spreadsheet.worksheet("Ability")
-        self.role = self.spreadsheet.worksheet("Role")
-        self.gender = self.spreadsheet.worksheet("Gender")
-        self.age = self.spreadsheet.worksheet("Age")
-        self.species = self.spreadsheet.worksheet("Species")
-        self.output = self.spreadsheet.worksheet("test")
+        # 出力ファイルヘッダー作成
+        self._init_output_file()
 
-    def get_random_attribute(self, sheet: gspread.Worksheet) -> str:
-        """シートからランダムに値を取得"""
-        values = sheet.col_values(1)[1:]  # ヘッダー除外
+    def _ensure_seed_data(self) -> None:
+        """シードデータがなければ初期データを作成"""
+        default_seeds = {
+            "age": [
+                "Child",
+                "Teenager",
+                "Young Adult",
+                "Middle-aged",
+                "Elder",
+                "Ageless",
+            ],
+            "gender": [
+                "Male",
+                "Female",
+                "Non-binary",
+                "Genderfluid",
+                "Androgynous",
+            ],
+            "species": [
+                "Human",
+                "Elf",
+                "Dwarf",
+                "Demon",
+                "Angel",
+                "Dragon-kin",
+                "Beastfolk",
+                "Undead",
+                "Cyborg",
+                "Alien",
+            ],
+            "ability": [
+                "Can manipulate fire at will",
+                "Has the power to read minds",
+                "Possesses superhuman strength",
+                "Can turn invisible",
+                "Has the ability to heal others",
+                "Can control time for brief moments",
+                "Possesses perfect memory",
+                "Can communicate with animals",
+            ],
+            "wants": [
+                "I want to find my lost family",
+                "I want to become the strongest warrior",
+                "I want to discover the truth about my past",
+                "I want to protect the innocent",
+                "I want to achieve immortality",
+                "I want to find true love",
+                "I want to conquer the world",
+                "I want to bring peace to all nations",
+            ],
+            "role": [
+                "Warrior. A skilled fighter dedicated to protecting others",
+                "Mage. A wielder of arcane arts seeking forbidden knowledge",
+                "Healer. A compassionate soul devoted to saving lives",
+                "Assassin. A shadow operative with deadly precision",
+                "Scholar. A seeker of ancient wisdom and lost lore",
+                "Merchant. A cunning trader with connections everywhere",
+                "Noble. A person of high birth with political influence",
+                "Wanderer. A mysterious traveler with no fixed home",
+            ],
+        }
+
+        for key, seed_file in self.seed_files.items():
+            if not seed_file.exists():
+                print(f"Creating seed file: {seed_file}")
+                with open(seed_file, "w", newline="", encoding="utf-8") as f:
+                    writer = csv.writer(f)
+                    writer.writerow([key])  # ヘッダー
+                    for value in default_seeds[key]:
+                        writer.writerow([value])
+
+    def _init_output_file(self) -> None:
+        """出力ファイルのヘッダーを書き込む"""
+        headers = [
+            "name",
+            "profile",
+            "catchphrase",
+            "image_prompt",
+            "concept",
+            "age",
+            "gender",
+            "species",
+            "ability",
+            "wants",
+            "role",
+        ]
+        with open(self.output_file, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(headers)
+
+    def _read_seed_values(self, seed_file: Path) -> list:
+        """シードファイルから値を読み込む"""
+        with open(seed_file, "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            next(reader)  # ヘッダースキップ
+            return [row[0] for row in reader if row]
+
+    def get_random_attribute(self, attr_type: str) -> str:
+        """ランダムに属性を取得"""
+        seed_file = self.seed_files[attr_type]
+        values = self._read_seed_values(seed_file)
         return random.choice(values)
 
     def append_output(self, row: list) -> None:
-        """結果を出力シートに追加"""
-        self.output.append_row(row)
+        """出力ファイルに行を追加"""
+        with open(self.output_file, "a", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(row)
 
-    def append_seed(self, sheet: gspread.Worksheet, value: str) -> None:
-        """シードデータを追加"""
-        sheet.append_row([value])
+    def append_seed(self, attr_type: str, value: str) -> None:
+        """シードデータに新しい値を追加"""
+        seed_file = self.seed_files[attr_type]
+        with open(seed_file, "a", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow([value])
 
 
 # =============================================================================
@@ -336,28 +431,30 @@ def main(iterations: Optional[int] = None) -> None:
         config = Config(
             model=config.model,
             host=config.host,
-            sheet_url=config.sheet_url,
-            credentials_path=config.credentials_path,
+            data_dir=config.data_dir,
             num_iterations=iterations,
         )
 
     print(f"Starting generation with model: {config.model}")
     print(f"Iterations: {config.num_iterations}")
+    print(f"Data directory: {config.data_dir}")
 
     llm = OllamaInference(config)
-    sheets = SheetsClient(config)
+    storage = LocalStorage(config)
+
+    print(f"Output file: {storage.output_file}")
 
     for i in range(config.num_iterations):
         print(f"\n[{i + 1}/{config.num_iterations}] Generating character...")
 
         # 属性取得
-        age = sheets.get_random_attribute(sheets.age)
-        gender = sheets.get_random_attribute(sheets.gender)
-        species = sheets.get_random_attribute(sheets.species)
-        physical = f"{age}{gender}{species}"
-        ability = sheets.get_random_attribute(sheets.ability)
-        wants = sheets.get_random_attribute(sheets.wants)
-        role = sheets.get_random_attribute(sheets.role)
+        age = storage.get_random_attribute("age")
+        gender = storage.get_random_attribute("gender")
+        species = storage.get_random_attribute("species")
+        physical = f"{age} {gender} {species}"
+        ability = storage.get_random_attribute("ability")
+        wants = storage.get_random_attribute("wants")
+        role = storage.get_random_attribute("role")
 
         # 推論
         concept = llm.generate(Prompts.character_concept(physical, role, ability, wants))
@@ -380,20 +477,21 @@ def main(iterations: Optional[int] = None) -> None:
             wants,
             role,
         ]
-        sheets.append_output(row)
+        storage.append_output(row)
 
         # 対キャラの属性生成
         new_ability = llm.generate(Prompts.new_ability(concept))
         new_wants = llm.generate(Prompts.new_wants(concept))
         new_role = llm.generate(Prompts.new_role(concept))
 
-        sheets.append_seed(sheets.ability, new_ability)
-        sheets.append_seed(sheets.wants, new_wants)
-        sheets.append_seed(sheets.role, new_role)
+        storage.append_seed("ability", new_ability)
+        storage.append_seed("wants", new_wants)
+        storage.append_seed("role", new_role)
 
         print(f"  Name: {name}")
 
-    print("\n処理が完了しました。")
+    print(f"\n処理が完了しました。")
+    print(f"出力ファイル: {storage.output_file}")
 
 
 if __name__ == "__main__":
