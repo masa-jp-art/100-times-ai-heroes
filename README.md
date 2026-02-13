@@ -34,33 +34,96 @@ Finalist entry for the 3rd AI Art Grand Prix
 
 - https://youtu.be/2luIVu3bXLg
 
-## Code
+---
+
+## Ollama Version (Local LLM)
+
+ローカルLLM（Ollama）を使用したオフライン完結版です。
+
+### Features
+
+- **完全ローカル実行**: インターネット接続不要
+- **無料**: API課金なし
+- **プライバシー**: データがクラウドに送信されない
+- **シード自動拡張**: 生成ごとに新しい属性が追加される
+
+### Requirements
+
+- Python 3.9+
+- [Ollama](https://ollama.com/)
+- 推奨モデル: `llama3.2` (2GB) または `deepseek-r1:7b` (4.7GB)
+
+### Quick Start
+
+```bash
+# 1. Ollamaインストール（macOS）
+brew install ollama
+
+# 2. モデルダウンロード
+ollama pull llama3.2
+
+# 3. 依存インストール
+pip install -r requirements.txt
+
+# 4. 環境設定
+cp .env.example .env
+
+# 5. 実行
+python ollama_hero_gen.py -n 10  # 10キャラクター生成
+```
+
+### Output
+
+生成されたキャラクターは `data/output_YYYYMMDD_HHMMSS.csv` に保存されます。
+
+| Column | Description |
+|--------|-------------|
+| name | キャラクター名（英語） |
+| profile | プロフィール（日本語） |
+| catchphrase | 決め台詞（日本語） |
+| image_prompt | 画像生成用プロンプト |
+| concept | キャラクターコンセプト（英語） |
+| age, gender, species | 身体的属性 |
+| ability, wants, role | 能力・願望・役割 |
+
+### Files
+
+```
+ollama_hero_gen.py      # メインスクリプト
+data/
+├── seed_*.csv          # シードデータ（自動生成・拡張）
+└── output_*.csv        # 生成結果
+```
+
+---
+
+## Original Code (OpenAI API)
 - https://github.com/masa-jp-art/100-times-ai-heroes/blob/main/20240916-AI-Art-GP-3-Charactor-v1.0.py
- 
+
 ## Workflow
 ```mermaid
 flowchart LR
-	Human((Human)) --> SeedsSheet[(Seeds Sheet)] 
+	Human((Human)) --> SeedsSheet[(Seeds Sheet)]
 	SeedsSheet --> |t2t-Few-Shot| SeedsSheet
-	Human --> WantsSheet[(Wants Sheet)] 
+	Human --> WantsSheet[(Wants Sheet)]
 	WantsSheet --> |t2t-Few-Shot| WantsSheet
-	Human --> GenderSheet[(Gender Sheet)] 
-	Human --> AgeSheet[(Age Sheet)] 
-	Human --> SpeciesSheet[(Species Sheet)] 
+	Human --> GenderSheet[(Gender Sheet)]
+	Human --> AgeSheet[(Age Sheet)]
+	Human --> SpeciesSheet[(Species Sheet)]
 	ReferenceImage -->|i2t| Subject
 	ReferenceImage -->|i2t| Angle
 	ReferenceImage -->|i2t| Pose
 	ReferenceImage -->|i2t| Background
-	ReferenceImage -->|i2t| ArtStyle 
-	ReferenceImage -->|i2t| 1[Role] 
-	1 --> RoleSheet[(Role Sheet)] 
+	ReferenceImage -->|i2t| ArtStyle
+	ReferenceImage -->|i2t| 1[Role]
+	1 --> RoleSheet[(Role Sheet)]
 	RoleSheet --> |t2t-Few-Shot| RoleSheet
-	GenderSheet -->|RAG| PhysicalCharacteristics 
-	AgeSheet -->|RAG| PhysicalCharacteristics 
-	SpeciesSheet -->|RAG| PhysicalCharacteristics 
-	SeedsSheet -->|RAG| Seeds 
-	WantsSheet -->|RAG| Wants 
-	RoleSheet -->|RAG| Role 
+	GenderSheet -->|RAG| PhysicalCharacteristics
+	AgeSheet -->|RAG| PhysicalCharacteristics
+	SpeciesSheet -->|RAG| PhysicalCharacteristics
+	SeedsSheet -->|RAG| Seeds
+	WantsSheet -->|RAG| Wants
+	RoleSheet -->|RAG| Role
 	BasePrompt -->|t2t| ImagePrompt
 	Seeds --> CharacterPrompt
 	Wants -->CharacterPrompt
