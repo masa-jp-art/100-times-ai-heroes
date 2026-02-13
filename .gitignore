@@ -34,3 +34,6 @@ htmlcov/
 # Temp
 *.log
 *.tmp
+
+# Local dev log (not synced to GitHub)
+DEV_LOG.md
