@@ -1,0 +1,91 @@
+# Claude Progress Log
+# このファイルはセッション間の作業履歴を記録します
+
+================================================================================
+SESSION: 2026-02-11 - Initial Setup
+================================================================================
+
+## 完了したタスク
+- [x] プロジェクト調査・既存コード分析
+- [x] 設計仕様書作成 (docs/DESIGN_SPEC_OLLAMA.md)
+- [x] モデル選定: gpt-oss-20b
+- [x] 動作環境確定: M4 MacBook Pro (128GB)
+- [x] ハーネス構築開始
+
+## 作成したファイル
+- docs/DESIGN_SPEC_OLLAMA.md (設計仕様書)
+- harness/features.json (機能リスト - 31機能)
+- harness/claude-progress.txt (本ファイル)
+
+## 次のセッションでやること
+- [ ] ollama_hero_gen.py 実装開始
+- [ ] ENV001, ENV002 テストをパスさせる
+
+## メモ
+- 既存のOpenAI版: 20240916-AI-Art-GP-3-Charactor-v1.0.py
+- Google Sheets連携はサービスアカウント認証方式に変更
+- プロンプトはOllama向けに最適化が必要
+
+================================================================================
+
+SESSION: 2026-02-11 - Harness Construction
+================================================================================
+
+## 完了したタスク
+- [x] ハーネス構築完了
+  - features.json (31機能の機能リスト)
+  - claude-progress.txt (進捗ログ)
+  - init.sh (環境初期化スクリプト)
+  - test_harness.py (pytest形式テストハーネス)
+  - SESSION_PROTOCOL.md (セッションプロトコル)
+
+## 作成したファイル
+- harness/features.json
+- harness/claude-progress.txt
+- harness/init.sh
+- harness/test_harness.py
+- harness/SESSION_PROTOCOL.md
+- CLAUDE.md (Claude Code用指示ファイル)
+- requirements.txt
+- .env.example
+- .gitignore
+
+## 次のセッションでやること
+- [ ] Google Sheets連携テスト（credentials.json, SHEET_URL設定後）
+- [ ] OLL002, OLL003（モデル存在確認、推論実行）をパス
+- [ ] E2E統合テスト
+
+## 機能進捗
+- 13/31 features passing
+
+================================================================================
+
+SESSION: 2026-02-11 - Core Implementation
+================================================================================
+
+## 完了したタスク
+- [x] ollama_hero_gen.py 実装完了
+  - Config (環境変数読み込み)
+  - OllamaInference (推論クライアント)
+  - SheetsClient (Google Sheets連携)
+  - Prompts (7種類のプロンプトテンプレート)
+  - generate_image_prompt (画像プロンプト生成)
+  - main (メインループ)
+- [x] Python 3.9互換性対応（型ヒント修正）
+- [x] Ollama APIのモデルリスト形式対応
+
+## テスト結果
+- 13/31 features passing
+- ENV001, ENV002: PASS（環境設定）
+- OLL001, OLL004, OLL005: PASS（Ollama接続・リトライ・タイムアウト）
+- PRM001-007: PASS（全プロンプト）
+- GEN001: PASS（ImagePrompt生成）
+- SHT001-006: SKIP（credentials.json未設定）
+- OLL002, OLL003: SKIP/FAIL（gpt-oss-20bモデル未インストール）
+
+## 次のセッションでやること
+- [ ] gpt-oss-20bモデルをOllamaにインストール（または代替モデル設定）
+- [ ] credentials.jsonとSHEET_URLを設定
+- [ ] E2E統合テスト実行
+
+================================================================================

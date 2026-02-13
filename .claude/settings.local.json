@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "WebFetch(domain:www.anthropic.com)",
+      "Bash(chmod:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(ollama list:*)",
+      "Bash(pytest:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
