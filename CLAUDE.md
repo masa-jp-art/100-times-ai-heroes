@@ -7,10 +7,20 @@
 
 **毎セッション開始時に以下を実行すること:**
 
-1. `cat harness/claude-progress.txt` で前回の進捗を確認
-2. `python -c "import json; d=json.load(open('harness/features.json')); print(f'{sum(1 for f in d[\"features\"] if f[\"passes\"])}/{len(d[\"features\"])} features passing')"` で機能進捗確認
-3. `git log --oneline -3` で最近のコミット確認
-4. 次に実装すべき機能を `features.json` から選定
+1. **DEV_LOG.mdを読む** - 前回の作業内容と「次回TODO」を確認
+2. `git log --oneline -5` で最近のコミット確認
+3. `git status` で現在の状態確認
+4. 「次回TODO」の内容をユーザーに報告し、作業を開始
+
+### セッション開始時の報告テンプレート
+```
+前回の作業: [DEV_LOG.mdから要約]
+次回TODO:
+- [ ] タスク1
+- [ ] タスク2
+
+上記の作業を続けますか？
+```
 
 ## 開発ルール
 
@@ -52,3 +62,35 @@ harness/
 
 ## 設計仕様
 詳細は `docs/DESIGN_SPEC_OLLAMA.md` を参照
+
+## 開発ログ（必須）
+
+**DEV_LOG.md はGitHubに同期されないローカル専用ログです。**
+
+### セッション中の更新タイミング
+以下のタイミングで必ず DEV_LOG.md を更新すること:
+
+1. **作業開始時**: 日付と作業内容の見出しを追加
+2. **コミット時**: コミット内容を記録
+3. **重要な変更時**: 設定変更、バグ修正、機能追加など
+4. **問題発生時**: エラー、コンフリクト、解決方法
+5. **セッション終了時**: 作業サマリーと次回のTODO
+
+### ログ形式
+```markdown
+## YYYY-MM-DD
+
+### [作業内容]
+- 変更点1
+- 変更点2
+
+### コミット
+- `abc1234` feat: 説明
+
+### 問題と解決
+- 問題: xxx
+- 解決: yyy
+
+### 次回TODO
+- [ ] タスク1
+```
