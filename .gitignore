@@ -2,6 +2,9 @@
 .env
 credentials.json
 
+# Data (generated)
+data/
+
 # Python
 __pycache__/
 *.py[cod]
