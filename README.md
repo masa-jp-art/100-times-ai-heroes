@@ -51,7 +51,7 @@ Finalist entry for the 3rd AI Art Grand Prix
 
 - Python 3.9+
 - [Ollama](https://ollama.com/)
-- 推奨モデル: `llama3.2` (2GB) または `deepseek-r1:7b` (4.7GB)
+- デフォルトモデル: `gpt-oss:20b`
 
 ### Quick Start
 
@@ -60,7 +60,7 @@ Finalist entry for the 3rd AI Art Grand Prix
 brew install ollama
 
 # 2. モデルダウンロード
-ollama pull llama3.2
+ollama pull gpt-oss:20b
 
 # 3. 依存インストール
 pip install -r requirements.txt

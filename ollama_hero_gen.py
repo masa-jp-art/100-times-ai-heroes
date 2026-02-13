@@ -39,7 +39,7 @@ class Config:
     def from_env(cls) -> "Config":
         load_dotenv()
         return cls(
-            model=os.getenv("OLLAMA_MODEL", "llama3.2"),
+            model=os.getenv("OLLAMA_MODEL", "gpt-oss:20b"),
             host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
             data_dir=os.getenv("DATA_DIR", "./data"),
         )
