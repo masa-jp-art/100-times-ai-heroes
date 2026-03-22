@@ -4,6 +4,13 @@
 Usage:
     python ollama_hero_gen.py
     python ollama_hero_gen.py --iterations 10
+    python ollama_hero_gen.py --model gpt-oss:20b-q4_K_M  # 量子化版
+    python ollama_hero_gen.py --model gpt-oss:120b          # 高性能版
+
+Available models:
+    gpt-oss:20b          標準（デフォルト）: 12GB VRAM、バランス重視
+    gpt-oss:20b-q4_K_M   量子化版: 低メモリ環境向け（約6GB）
+    gpt-oss:120b         高性能版: 高スペックマシン向け
 """
 
 from __future__ import annotations
@@ -39,7 +46,7 @@ class Config:
     def from_env(cls) -> "Config":
         load_dotenv()
         return cls(
-            model=os.getenv("OLLAMA_MODEL", "llama3.2"),
+            model=os.getenv("OLLAMA_MODEL", "gpt-oss:20b"),
             host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
             data_dir=os.getenv("DATA_DIR", "./data"),
         )
@@ -126,7 +133,7 @@ class LocalStorage:
         self.data_dir = Path(config.data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        # シードデータファイル
+        # シードデータファイル（全実行で共有）
         self.seed_files = {
             "age": self.data_dir / "seed_age.csv",
             "gender": self.data_dir / "seed_gender.csv",
@@ -136,9 +143,11 @@ class LocalStorage:
             "role": self.data_dir / "seed_role.csv",
         }
 
-        # 出力ファイル
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.output_file = self.data_dir / f"output_{timestamp}.csv"
+        # 実行ごとに固有のディレクトリを作成して出力を保存
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        self.run_dir = self.data_dir / f"run_{timestamp}"
+        self.run_dir.mkdir(parents=True, exist_ok=True)
+        self.output_file = self.run_dir / "output.csv"
 
         # シードデータ初期化
         self._ensure_seed_data()
@@ -424,15 +433,15 @@ def generate_image_prompt(concept: str) -> str:
 # =============================================================================
 
 
-def main(iterations: Optional[int] = None) -> None:
+def main(iterations: Optional[int] = None, model: Optional[str] = None) -> None:
     config = Config.from_env()
 
-    if iterations is not None:
+    if iterations is not None or model is not None:
         config = Config(
-            model=config.model,
+            model=model if model is not None else config.model,
             host=config.host,
             data_dir=config.data_dir,
-            num_iterations=iterations,
+            num_iterations=iterations if iterations is not None else config.num_iterations,
         )
 
     print(f"Starting generation with model: {config.model}")
@@ -442,6 +451,7 @@ def main(iterations: Optional[int] = None) -> None:
     llm = OllamaInference(config)
     storage = LocalStorage(config)
 
+    print(f"Run directory: {storage.run_dir}")
     print(f"Output file: {storage.output_file}")
 
     for i in range(config.num_iterations):
@@ -491,16 +501,49 @@ def main(iterations: Optional[int] = None) -> None:
         print(f"  Name: {name}")
 
     print(f"\n処理が完了しました。")
+    print(f"実行ディレクトリ: {storage.run_dir}")
     print(f"出力ファイル: {storage.output_file}")
 
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="100 Times AI Heroes - Ollama版")
+    # 利用可能なモデル一覧
+    AVAILABLE_MODELS = [
+        "gpt-oss:20b",           # 標準（デフォルト）
+        "gpt-oss:20b-q4_K_M",    # 量子化版（低メモリ環境向け）
+        "gpt-oss:120b",          # 高性能版（高スペックマシン向け）
+    ]
+
+    parser = argparse.ArgumentParser(
+        description="100 Times AI Heroes - Ollama版",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+モデル選択ガイド:
+  gpt-oss:20b          標準モデル（デフォルト）。M4 MacBook Pro等の推奨環境向け
+  gpt-oss:20b-q4_K_M   量子化版。メモリが限られている環境向け（約6GB）
+  gpt-oss:120b         高性能モデル。128GB以上のメモリを持つ高スペックマシン向け
+
+出力先:
+  各実行の結果は data/run_YYYYMMDD_HHMMSS/output.csv に保存されます。
+  複数回の実行でもディレクトリが分かれるため結果が上書きされません。
+        """,
+    )
     parser.add_argument(
         "--iterations", "-n", type=int, default=None, help="生成するキャラクター数"
     )
+    parser.add_argument(
+        "--model",
+        "-m",
+        type=str,
+        default=None,
+        choices=AVAILABLE_MODELS,
+        metavar="MODEL",
+        help=(
+            f"使用するOllamaモデル。選択肢: {', '.join(AVAILABLE_MODELS)} "
+            f"（デフォルト: gpt-oss:20b）"
+        ),
+    )
     args = parser.parse_args()
 
-    main(iterations=args.iterations)
+    main(iterations=args.iterations, model=args.model)

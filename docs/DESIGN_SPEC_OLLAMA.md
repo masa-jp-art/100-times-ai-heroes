@@ -33,7 +33,7 @@
 │  │  main.py         │     │    Ollama Server        │      │
 │  │  (Python 3.10+)  │────►│  localhost:11434        │      │
 │  └──────────────────┘     │                         │      │
-│           │               │  Model: gpt-oss-20b     │      │
+│           │               │  Model: gpt-oss:20b     │      │
 │           │               └─────────────────────────┘      │
 │           │                                                 │
 │           ▼                                                 │
@@ -86,13 +86,13 @@
 
 ### 4.2 推奨モデル
 
-| モデル | VRAM | 日本語 | 創造性 | 推奨度 |
-|--------|------|--------|--------|--------|
-| **gpt-oss-20b** | 12GB | ◎ | ◎ | ★★★ |
-| gemma2:9b | 6GB | ◎ | ◎ | ★★☆ |
-| qwen2.5:7b | 5GB | ◎ | ○ | ★☆☆ |
+| モデル | メモリ目安 | 日本語 | 創造性 | 備考 |
+|--------|-----------|--------|--------|------|
+| **gpt-oss:20b** | 12GB | ◎ | ◎ | **デフォルト**・標準環境向け |
+| **gpt-oss:20b-q4_K_M** | 約6GB | ◎ | ○ | 量子化版・低メモリ環境向け |
+| **gpt-oss:120b** | 80GB+ | ◎ | ◎ | 高性能版・高スペックマシン向け |
 
-**プライマリ**: `gpt-oss-20b`
+**プライマリ**: `gpt-oss:20b`
 
 ---
 
@@ -100,7 +100,10 @@
 
 ### 5.1 環境変数 (.env)
 ```bash
-OLLAMA_MODEL=gpt-oss-20b
+# 標準モデル（デフォルト）
+OLLAMA_MODEL=gpt-oss:20b
+# 量子化版を使う場合: OLLAMA_MODEL=gpt-oss:20b-q4_K_M
+# 高性能版を使う場合: OLLAMA_MODEL=gpt-oss:120b
 OLLAMA_HOST=http://localhost:11434
 SHEET_URL=https://docs.google.com/spreadsheets/d/xxxxx
 CREDENTIALS_PATH=./credentials.json
@@ -446,13 +449,15 @@ brew install ollama
 # Ollamaサーバー起動（別ターミナルまたはバックグラウンド）
 ollama serve
 
-# モデルダウンロード（約12GB）
-ollama pull gpt-oss-20b
-```
+# 標準モデルダウンロード（約12GB）※デフォルト
+ollama pull gpt-oss:20b
 
-**M4 MacBook Pro (128GB) の場合**:
-- メモリ十分のため、フルモデル（gpt-oss-20b）推奨
-- 量子化版（q4_K_M等）は不要
+# 量子化版（約6GB、低メモリ環境向け）
+# ollama pull gpt-oss:20b-q4_K_M
+
+# 高性能版（128GB以上のメモリを推奨）
+# ollama pull gpt-oss:120b
+```
 
 ### 7.3 Google認証設定
 
@@ -480,7 +485,7 @@ python ollama_hero_gen.py
 
 ## 8. パフォーマンス
 
-### 8.1 推定処理時間（gpt-oss-20b）
+### 8.1 推定処理時間（gpt-oss:20b）
 
 **動作環境**: M4 MacBook Pro (128GB)
 
@@ -492,16 +497,40 @@ python ollama_hero_gen.py
 - 128GBメモリで gpt-oss-20b を余裕で実行可能
 - Metal GPUアクセラレーション対応
 
-### 8.2 軽量化オプション（参考）
-
-M4 MacBook Pro (128GB) では不要。他環境向け参考情報:
+### 8.2 モデル選択オプション
 
 ```bash
-# 軽量モデル（6GB以下環境向け）
-OLLAMA_MODEL=gemma2:9b
+# 標準（デフォルト）: M4 MacBook Pro等の推奨環境
+ollama pull gpt-oss:20b
+python ollama_hero_gen.py
 
-# 量子化版（12GB以下環境向け）
-ollama pull gpt-oss-20b:q4_K_M
+# 量子化版: メモリが約6GB以上の環境（標準より少し品質が落ちる）
+ollama pull gpt-oss:20b-q4_K_M
+python ollama_hero_gen.py --model gpt-oss:20b-q4_K_M
+
+# 高性能版: 128GB以上のメモリを持つ高スペックマシン向け
+ollama pull gpt-oss:120b
+python ollama_hero_gen.py --model gpt-oss:120b
+```
+
+### 8.3 出力ディレクトリ構造
+
+各実行の結果は実行単位のディレクトリに保存されます。複数回実行しても結果が上書きされず、後から各試行をたどることができます。
+
+```
+data/
+├── seed_age.csv             # シードデータ（全実行で共有・自動拡張）
+├── seed_gender.csv
+├── seed_species.csv
+├── seed_ability.csv
+├── seed_wants.csv
+├── seed_role.csv
+├── run_20260101_120000/     # 1回目の実行
+│   └── output.csv
+├── run_20260101_130000/     # 2回目の実行
+│   └── output.csv
+└── run_20260101_140000/     # 3回目の実行
+    └── output.csv
 ```
 
 ---
@@ -536,3 +565,4 @@ ollama pull gpt-oss-20b:q4_K_M
 |-----|------|------|
 | 1.0 | 2026-02-11 | 初版 |
 | 1.1 | 2026-02-11 | ローカル実行特化版に改訂 |
+| 1.2 | 2026-03-22 | デフォルトモデルを `gpt-oss:20b` に変更。量子化版・120b選択肢追加。実行単位出力ディレクトリ導入 |

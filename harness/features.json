@@ -15,7 +15,7 @@
       "id": "ENV002",
       "category": "environment",
       "name": "設定デフォルト値",
-      "description": "環境変数未設定時にgpt-oss-20b, localhost:11434をデフォルト使用",
+      "description": "環境変数未設定時にgpt-oss:20b, localhost:11434をデフォルト使用",
       "passes": true,
       "test": "test_config_defaults"
     },
@@ -170,6 +170,14 @@
       "description": "固定テンプレートからImagePromptを構築",
       "passes": true,
       "test": "test_image_prompt_generation"
+    },
+    {
+      "id": "GEN006",
+      "category": "generation",
+      "name": "実行単位ディレクトリ出力",
+      "description": "各実行の出力をdata/run_YYYYMMDD_HHMMSS/output.csvに保存し、実行間で上書きが起きないこと",
+      "passes": true,
+      "test": "test_run_directory_isolation"
     },
     {
       "id": "GEN002",
