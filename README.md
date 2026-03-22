@@ -51,7 +51,7 @@ Finalist entry for the 3rd AI Art Grand Prix
 
 - Python 3.9+
 - [Ollama](https://ollama.com/)
-- 推奨モデル: `llama3.2` (2GB) または `deepseek-r1:7b` (4.7GB)
+- 推奨モデル: `gpt-oss:20b`（デフォルト）
 
 ### Quick Start
 
@@ -59,8 +59,8 @@ Finalist entry for the 3rd AI Art Grand Prix
 # 1. Ollamaインストール（macOS）
 brew install ollama
 
-# 2. モデルダウンロード
-ollama pull llama3.2
+# 2. モデルダウンロード（標準: gpt-oss:20b, 約12GB）
+ollama pull gpt-oss:20b
 
 # 3. 依存インストール
 pip install -r requirements.txt
@@ -72,9 +72,42 @@ cp .env.example .env
 python ollama_hero_gen.py -n 10  # 10キャラクター生成
 ```
 
+### Model Options
+
+実行環境に合わせてモデルを選択できます。
+
+| モデル | メモリ目安 | 特徴 | 選択コマンド |
+|--------|-----------|------|-------------|
+| `gpt-oss:20b` | 12GB | **標準・デフォルト** | （省略可） |
+| `gpt-oss:20b-q4_K_M` | 約6GB | 量子化版・低メモリ環境向け | `--model gpt-oss:20b-q4_K_M` |
+| `gpt-oss:120b` | 80GB+ | 高性能版・高スペックマシン向け | `--model gpt-oss:120b` |
+
+```bash
+# 量子化版を使用
+ollama pull gpt-oss:20b-q4_K_M
+python ollama_hero_gen.py --model gpt-oss:20b-q4_K_M
+
+# 高性能版を使用（128GB以上のメモリを推奨）
+ollama pull gpt-oss:120b
+python ollama_hero_gen.py --model gpt-oss:120b
+```
+
 ### Output
 
-生成されたキャラクターは `data/output_YYYYMMDD_HHMMSS.csv` に保存されます。
+各実行の結果は `data/run_YYYYMMDD_HHMMSS/` ディレクトリに保存されます。実行するたびに新しいディレクトリが作られるため、過去の結果が上書きされません。
+
+```
+data/
+├── seed_*.csv                   # シードデータ（全実行で共有・自動拡張）
+├── run_20260101_120000/
+│   └── output.csv               # 1回目の実行結果
+├── run_20260101_130000/
+│   └── output.csv               # 2回目の実行結果
+└── run_20260101_140000/
+    └── output.csv               # 3回目の実行結果
+```
+
+`output.csv` のカラム構成:
 
 | Column | Description |
 |--------|-------------|
@@ -91,8 +124,9 @@ python ollama_hero_gen.py -n 10  # 10キャラクター生成
 ```
 ollama_hero_gen.py      # メインスクリプト
 data/
-├── seed_*.csv          # シードデータ（自動生成・拡張）
-└── output_*.csv        # 生成結果
+├── seed_*.csv          # シードデータ（自動生成・拡張、全実行で共有）
+└── run_*/
+    └── output.csv      # 実行ごとの生成結果（上書きなし）
 ```
 
 ---

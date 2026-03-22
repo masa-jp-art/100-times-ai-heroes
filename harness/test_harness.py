@@ -106,7 +106,7 @@ class TestEnvironment(FeatureTest):
             from ollama_hero_gen import Config
 
             config = Config.from_env()
-            assert config.model == "gpt-oss-20b"
+            assert config.model == "gpt-oss:20b"
             assert config.host == "http://localhost:11434"
         except ImportError:
             pytest.skip("ollama_hero_gen.py not implemented yet")
@@ -413,6 +413,43 @@ class TestGeneration(FeatureTest):
         except ImportError:
             pytest.skip("ollama_hero_gen.py not implemented yet")
 
+    def test_run_directory_isolation(self, tmp_path):
+        """GEN006: 実行単位ディレクトリ出力"""
+        self.feature_id = "GEN006"
+
+        try:
+            from ollama_hero_gen import Config, LocalStorage
+
+            config = Config(
+                model="gpt-oss:20b",
+                host="http://localhost:11434",
+                data_dir=str(tmp_path),
+            )
+
+            storage1 = LocalStorage(config)
+            storage2 = LocalStorage(config)
+
+            # 各インスタンスが固有のrun_dirを持つこと
+            assert storage1.run_dir != storage2.run_dir
+
+            # run_dir が data_dir 直下に作られること
+            assert storage1.run_dir.parent == tmp_path
+            assert storage2.run_dir.parent == tmp_path
+
+            # run_dir 名が run_ プレフィックスを持つこと
+            assert storage1.run_dir.name.startswith("run_")
+            assert storage2.run_dir.name.startswith("run_")
+
+            # output.csv が run_dir 内に作られること
+            assert storage1.output_file == storage1.run_dir / "output.csv"
+            assert storage2.output_file == storage2.run_dir / "output.csv"
+
+            # シードファイルは data_dir 直下（共有）であること
+            for seed_file in storage1.seed_files.values():
+                assert seed_file.parent == tmp_path
+        except ImportError:
+            pytest.skip("ollama_hero_gen.py not implemented yet")
+
     def test_single_character_generation(self):
         """GEN002: 単一キャラクター生成"""
         self.feature_id = "GEN002"
@@ -558,6 +595,7 @@ def update_features_from_results():
         "test_prompt_new_wants": "PRM006",
         "test_prompt_new_role": "PRM007",
         "test_image_prompt_generation": "GEN001",
+        "test_run_directory_isolation": "GEN006",
         "test_single_character_generation": "GEN002",
         "test_complementary_attributes": "GEN003",
         "test_generation_loop": "GEN004",
